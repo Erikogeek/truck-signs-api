@@ -1,6 +1,7 @@
 # Build and publish the docker image to the Github Container Register
 name: Build Application
 
+# Start the workflow whenever code is pushed to the feature/ts-api branch
 on:
   push:
     tags:
@@ -9,15 +10,26 @@ on:
 
 # Grant permission to pubish packages to GHCR
 permissions:
+
+  # Allow the workflow to read the repository contents
   contents: read
+
+  # Allow the workflow to push Docker images to GitHub Container Registry
   packages: write
 
+# Definition of the workflow jobs
 jobs:
+
+  # Job responsible for building and pushing the Docker images
   build_and_push:
+
+    # Run the job on a GitHub-hosted Ubuntu runner
     runs-on: ubuntu-latest
 
+    # Steps executed during the build job
     steps:
-      # Download the repository source code
+
+      # Check out the repository on the GitHub runner
       - name: Checkout Repository
         uses: actions/checkout@v6
     
