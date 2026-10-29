@@ -28,4 +28,4 @@ RUN chmod 755 /app/entrypoint.sh
 EXPOSE 8000
 
 # Start the application through the entrypoint script
-ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
