@@ -1,12 +1,5 @@
 FROM python:3.12-slim
 
-WORKDIR /app
-
-# install netcat for database
-
-# Use a lightweight Python 3.12 image
-FROM python:3.12-slim
-
 # Set the working directory inside the container
 WORKDIR /app
 
@@ -29,10 +22,10 @@ COPY . /app
 RUN sed -i 's/\r$//' /app/entrypoint.sh
 
 # Make the entrypoint script executable
-RUN chmod +x /app/entrypoint.sh
+RUN chmod 755 /app/entrypoint.sh
 
 # The port used by Gunicorn inside the container
 EXPOSE 8000
 
 # Start the application through the entrypoint script
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
