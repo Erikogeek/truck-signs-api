@@ -29,7 +29,7 @@ COPY . /app
 RUN sed -i 's/\r$//' /app/entrypoint.sh
 
 # Make the entrypoint script executable
-RUN chmod 755 /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # The port used by Gunicorn inside the container
 EXPOSE 8000
