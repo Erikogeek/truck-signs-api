@@ -32,26 +32,6 @@ The backend runs inside a Docker container and is served by Gunicorn. Docker Com
 
 The project also includes automated code quality checks and Django tests using GitHub Actions.
 
-## Architecture
-The application runs as a Docker Compose environment with a Django REST API and a PostgreSQL database.
-
-```mermaid
-flowchart TD
-    Client["Client / Browser / Postman"]
-
-    subgraph Docker["Docker Compose"]
-        Backend["Django REST API<br/>Gunicorn :8000"]
-        Database[("PostgreSQL<br/>:5432")]
-    end
-
-    Client -->|"HTTP :8020"| Backend
-    Backend -->|"Database connection"| Database
-
-    GitHub["GitHub Repository"]
-    Actions["GitHub Actions"]
-
-    GitHub --> Actions
-```
 ## Project goal
 The goal of this project is to run the Truck Signs API and its PostgreSQL database using Docker Compose.
 
@@ -73,7 +53,6 @@ The main project files include:
 
 ## project status
 The following project components have been implemented/adjusted and tested:
-
 * Docker image build.
 * Docker Compose backend and database services.
 * PostgreSQL connectivity.
@@ -90,7 +69,7 @@ The following tools are required:
 - Git
 - Docker
 - Docker Compose
-- GitHub account for repository access and workflows
+- GitHub account for repository access and workflows.
 
 Python 3.12 is used by the backend Docker image.
 
@@ -130,7 +109,6 @@ After the container running the `Django Admin is reachable` under
 `http://<YOUR_IP>:8020/admin`.
 
 ## Usage
-
 After starting the application with Docker Compose, the API can be accessed locally.
 - Access the Django Admin
 ```text
@@ -144,10 +122,7 @@ Log in using the superuser credentials configured in your `.env` file like the t
 | DJANGO_SUPERUSER_EMAIL|developerakademie@yahoo.com|
 | DJANGO_SUPERUSER_PASSWORD | admin_password123 |
 
-- API Requests
-
-### API Endpoints
-
+* API Endpoints
 The API provides endpoints for categories, products, product variations, colors, truck logos, orders, payments, comments, and customer image uploads.
 
 The following endpoints are defined in the `tsa_products` URL configuration.
