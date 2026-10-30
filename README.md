@@ -75,7 +75,7 @@ Python 3.12 is used by the backend Docker image.
 
 ## Quickstart
 
-1. Clone the repo:
+1. Clone the repository:
 ```bash
 git clone git@github.com:Developer-Akademie-DevSecOpsKurs/truck-signs-api.git
 cd truck-signs-api
@@ -151,8 +151,6 @@ The endpoint paths above are relative to the API URL prefix configured in the ma
 Use a web browser or Postman to test the API endpoints.
 
 - Run the Application
-
-    - Start the services:
 ```bash
 docker compose up -d
 ```
@@ -183,4 +181,5 @@ GitHub Actions is used to automate project checks and tests.
 
 The workflows are located in:
 - `.github/workflows/`
+
 They help verify the project changes before they are merged through a pull request.
