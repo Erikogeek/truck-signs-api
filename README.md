@@ -12,17 +12,14 @@ The store also allows clients to upload their own designs and to customize them 
 </div>
 
 ## Table of Contents
-
-- [Table of Contents](#table-of-contents)
-    - [Overview](#Overview)
-    - [The goal of this project](#The-goal-of-this-project)
-    - [Project structure](#Project-structure)
-    - [project status](#project-status)
-    - [Prerequisites](#prerequisites)
-    - [Quickstart](#quickstart)
-    - [Usage](#usage)
+- [Overview](#Overview)
+- [The goal of this project](#The-goal-of-this-project)
+- [Project structure](#Project-structure)
+- [project status](#project-status)
+- [Prerequisites](#prerequisites)
+- [Quickstart](#quickstart)
+- [Usage](#usage)
     
-
 ## Overview
 Truck Signs API v2 is a RESTful backend application designed to manage truck signs.
 
