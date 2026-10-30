@@ -23,33 +23,18 @@ python manage.py migrate --noinput
 
 echo "Database migrations completed."
 
-# Create the superuser only when all required variables are configured
-# and a user with the specified username does not already exist
-if [ -n "${DJANGO_SUPERUSER_USERNAME:-}" ] \
-    && [ -n "${DJANGO_SUPERUSER_EMAIL:-}" ] \
-    && [ -n "${DJANGO_SUPERUSER_PASSWORD:-}" ]; then
+# Create the superuser only when all required variables are configured.
+if [ -n "${DJANGO_SUPERUSER_USERNAME:-}" ] && [ -n "${DJANGO_SUPERUSER_EMAIL:-}" ] && [ -n "${DJANGO_SUPERUSER_PASSWORD:-}" ]; then
 
-    # Check whether the superuser already exists
-    if ! python manage.py shell -c "
-import os
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-username = os.environ['DJANGO_SUPERUSER_USERNAME']
-
-exists = User.objects.filter(username=username).exists()
-raise SystemExit(0 if exists else 1)
-"; then
-
-        # Create the superuser if it does not exist
-        python manage.py createsuperuser --noinput \
-            --username "$DJANGO_SUPERUSER_USERNAME" \
-            --email "$DJANGO_SUPERUSER_EMAIL"
-
-        echo "Superuser created."
-    else
+    # Check whether the user already exists.
+    if python manage.py shell -c "import os; from django.contrib.auth import get_user_model; User = get_user_model(); raise SystemExit(0 if User.objects.filter(username=os.environ['DJANGO_SUPERUSER_USERNAME']).exists() else 1)"; then
         echo "Superuser already exists."
+    else
+        # Create the superuser with the configured password.
+        python manage.py shell -c "import os; from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(username=os.environ['DJANGO_SUPERUSER_USERNAME'], email=os.environ['DJANGO_SUPERUSER_EMAIL'], password=os.environ['DJANGO_SUPERUSER_PASSWORD']); print('Superuser created.')"
     fi
+else
+    echo "Superuser creation skipped: required environment variables are missing."
 fi
 
 # Collect static files for production
