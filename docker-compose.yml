@@ -1,49 +1,69 @@
+
 services:
   db:
-    image: postgres:7-alpine
+    # Use a valid PostgreSQL image version.
+    image: postgres:15-alpine
     container_name: tsa_db
-    env_file: .env
+    restart: unless-stopped
+
+    # Load database settings from the local .env file.
+    env_file:
+      - .env
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    # Keep the database accessible only through the Docker network.
     networks:
       - tsa-network
+
+    # Persist database data across container restarts.
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
+
+    # Check wheter PostgreSQL is ready.
     healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'pg_isready -U ${DB_USER} -d ${DB_NAME}',
-        ]
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
-    build: .
+    # Use the prebuilt image from Github Container Registry.
+    image: ${BACKEND_IMAGE}
     container_name: tsa_backend
-    command: gunicorn tsa_app.wsgi:application --bind 0.0.0.0:8000 --workers 4
+    restart: unless-stopped
+
+    # Load application configuration and secrets.
+    env_file:
+      - .env
+
+    environment:
+      MODE: ${MODE}
+      DEBUG_ENABLED: ${DEBUG_ENABLED}
+      DB_HOST: db
+      DB_PORT: "5432"
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+
+    # Expose the API on port 8020 of the host.
+    ports:
+      - "8020:8000"
+
     networks:
       - tsa-network
-    environment:
-      MODE: prod
-      DEBUG_ENABLED: 'False'
-      DB_NAME: trucksigns_db
-      DB_USER: trucksigns_user
-      DB_PASSWORD: supertrucksignsuser!
-      DB_HOST: tsa_db
-      DB_PORT: 5432
-      ALLOWED_HOSTS: localhost,127.0.0.1,tsa-web
-    volumes:
-      - ./src/staticfiles:/app/src/staticfiles
-      - ./src/media:/app/src/media
+
+    # Start the backend only after PostgreSQL is healthy.
     depends_on:
       db:
         condition: service_healthy
 
 volumes:
+  # Named volume for persistent PostgreSQL data.
   postgres_data:
 
 networks:
+  # Shared private network for the application and database.
   tsa-network:
     driver: bridge
